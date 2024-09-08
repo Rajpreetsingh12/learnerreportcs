@@ -1,0 +1,29 @@
+backend:
+  namespace: backend
+  replicas: 1
+  containerPort: 3000
+  image: learnerreportcsbackend:latest
+  secrets:
+    ATLAS_URI: "mongodb+srv://Rajpreetmongo:Rajeemongo@cluster0.umhetht.mongodb.net/learnerreportdb"
+    HASH_KEY: "f2S8+eLhBt3tJKU8LzE9kQ9kN8rF9R+T"
+    JWT_SECRET_KEY: "xJ9fgPhB+T2Hs9Wn+6w5rT3NnK7vZ9Z8"
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+
+frontend:
+  namespace: frontend
+  replicas: 1
+  containerPort: 3000
+  image: :learnerreport-frontendlatest
+  resources:
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
