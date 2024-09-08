@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.6.3'   // Make sure this matches the Maven version installed in Jenkins
-        jdk 'JDK 11'          // Ensure you use the correct JDK version
-    }
-
-
     environment {
         GIT_REPO = "https://github.com/Rajpreetsingh12/learnerreportcs.git"  // Ensure both FE/BE are part of this repo
         REGISTRY = "docker.io"
