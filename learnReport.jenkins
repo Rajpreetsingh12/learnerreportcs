@@ -2,11 +2,14 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = "https://github.com/Sukhilnair/learnerReportCS.git"  // Ensure both FE/BE are part of this repo
+        GIT_REPO = "https://github.com/Rajpreetsingh12/learnerreportcs.git"  // Ensure both FE/BE are part of this repo
         REGISTRY = "docker.io"
-        DOCKER_HUB_REPO = "sukhilnair/learnerreport"
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKERHUB_USERNAME = 'rajedocker1234'
+        FRONTEND_REPO = 'learnerreportcsfrontend'
+        BACKEND_REPO = 'learnerreportcsbackend'
         KUBE_CONTEXT = "minikube"
-        VERSION = "v${BUILD_NUMBER}"  // Automatically use Jenkins build number as version
+        VERSION = "v1.0.0"  // Automatically use Jenkins build number as version
     }
 
     stages {
