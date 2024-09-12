@@ -5,12 +5,11 @@ pipeline {
         GIT_REPO = "https://github.com/Rajpreetsingh12/learnerreportcs.git"
         REGISTRY = "docker.io"
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
-        DOCKERHUB_USERNAME = 'rajedocker1234'
+        DOCKERHUB_USERNAME = 'rajedocker1234' // Use this as your Docker Hub username
         FRONTEND_REPO = 'learnerReportCS_frontend'
         BACKEND_REPO = 'learnerReportCS_backend'
         KUBE_CONTEXT = "minikube"
         VERSION = "v1.0.0"
-        DOCKER_HUB_REPO = 'your-dockerhub-username'
     }
 
     stages {
@@ -32,7 +31,8 @@ pipeline {
             steps {
                 script {
                     dir("${env.BACKEND_REPO}") {
-                        sh 'docker build -t $DOCKER_HUB_REPO/backend-$VERSION -t $DOCKER_HUB_REPO/backend-latest .'
+                        // Build the backend image and tag it
+                        sh 'docker build -t $DOCKERHUB_USERNAME/backend:$VERSION -t $DOCKERHUB_USERNAME/backend:latest .'
                     }
                 }
             }
@@ -42,7 +42,8 @@ pipeline {
             steps {
                 script {
                     dir("${env.FRONTEND_REPO}") {
-                        sh 'docker build -t $DOCKER_HUB_REPO/frontend-$VERSION -t $DOCKER_HUB_REPO/frontend-latest .'
+                        // Build the frontend image and tag it
+                        sh 'docker build -t $DOCKERHUB_USERNAME/frontend:$VERSION -t $DOCKERHUB_USERNAME/frontend:latest .'
                     }
                 }
             }
@@ -51,6 +52,7 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
+                    // Use credentials to login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                     }
@@ -61,8 +63,9 @@ pipeline {
         stage('Push Backend Image') {
             steps {
                 script {
-                    sh 'docker push $DOCKER_HUB_REPO/backend-$VERSION'
-                    sh 'docker push $DOCKER_HUB_REPO/backend-latest'
+                    // Push the backend images to Docker Hub
+                    sh 'docker push $DOCKERHUB_USERNAME/backend:$VERSION'
+                    sh 'docker push $DOCKERHUB_USERNAME/backend:latest'
                 }
             }
         }
@@ -70,8 +73,9 @@ pipeline {
         stage('Push Frontend Image') {
             steps {
                 script {
-                    sh 'docker push $DOCKER_HUB_REPO/frontend-$VERSION'
-                    sh 'docker push $DOCKER_HUB_REPO/frontend-latest'
+                    // Push the frontend images to Docker Hub
+                    sh 'docker push $DOCKERHUB_USERNAME/frontend:$VERSION'
+                    sh 'docker push $DOCKERHUB_USERNAME/frontend:latest'
                 }
             }
         }
@@ -79,8 +83,9 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
+                    // Deploy the application to Kubernetes using Helm
                     sh 'kubectl config use-context $KUBE_CONTEXT'
-                    sh 'helm upgrade --install learnerreport ./learnerReportHelm --set backend.image=$DOCKER_HUB_REPO/backend-$VERSION --set frontend.image=$DOCKER_HUB_REPO/frontend-$VERSION'
+                    sh 'helm upgrade --install learnerreport ./learnerReportHelm --set backend.image=$DOCKERHUB_USERNAME/backend:$VERSION --set frontend.image=$DOCKERHUB_USERNAME/frontend:$VERSION'
                 }
             }
         }
