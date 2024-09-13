@@ -80,6 +80,14 @@ pipeline {
             }
         }
 
+        stage('Start Minikube') {   // Added stage to start Minikube
+            steps {
+                script {
+                    sh 'minikube start'
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {
