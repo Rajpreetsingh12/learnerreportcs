@@ -80,10 +80,13 @@ pipeline {
             }
         }
 
-        stage('Start Minikube') {   // Added stage to start Minikube
+        stage('Start Minikube') {   // Minikube setup stage
             steps {
                 script {
+                    // Start Minikube
                     sh 'minikube start'
+                    // Set Minikube context after starting
+                    sh 'kubectl config set-context minikube --cluster=minikube --user=minikube'
                 }
             }
         }
